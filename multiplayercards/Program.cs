@@ -42,11 +42,15 @@ namespace multiplayercards
                 if (winners.Count > 1)
                 {
                     winners = processResults.RecalculateTiedPlayers(winners);
+                    Console.WriteLine(string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore) + ":" + winners.Max(x => x.playerSuitScore));
+
                     fileInputOutputSystem.WriteOutputFile(outputfilepath, string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore) + ":" + winners.Max(x => x.playerSuitScore));
 
                 }
                 else
                 {
+                    Console.WriteLine( string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore));
+
                     fileInputOutputSystem.WriteOutputFile(outputfilepath, string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore));
 
                 }
@@ -435,8 +439,6 @@ namespace multiplayercards
                 var hightestscore = players.Max(x => x.playerScore);
                 var result = players.Where(x => x.playerScore == hightestscore).ToList();
 
-                Console.WriteLine(string.Join(",", result.Select(x => x.playerName)) + ":" + hightestscore);
-
                 return result;
             }
             else
@@ -454,7 +456,6 @@ namespace multiplayercards
                 var hightestscore = players.Max(x => x.playerSuitScore);
                 var result = players.Where(x => x.playerSuitScore == hightestscore).ToList();
 
-                Console.WriteLine(string.Join(",", result.Select(x => x.playerName)) + ":" + hightestscore);
 
                 return result;
             }
