@@ -25,13 +25,13 @@ namespace multiplayercards
             {
                 ValidateInputParamters validateInput = new ValidateInputParamters();
 
-                var parametters = validateInput.GetInputOutputFiles(args);
+                var parameters = validateInput.GetInputOutputFiles(args);
 
-                inputfilepath = fileInputOutputSystem.GetFilePath(parametters.input);
+                inputfilepath = fileInputOutputSystem.GetFilePath(parameters.input);
 
                 var fileData = fileInputOutputSystem.ReadInputFile(inputfilepath);
 
-                outputfilepath = fileInputOutputSystem.GetOutPutFilePath(parametters.output);
+                outputfilepath = fileInputOutputSystem.GetOutPutFilePath(parameters.output);
 
                 LoadPlayer loadPlayer = new LoadPlayer(fileData);
 
@@ -126,7 +126,7 @@ namespace multiplayercards
             }
             else
             {
-                throw new Exception($"Exception: Command parameters --out is incorrect.");
+                throw new Exception($"Exception: Command parameters are required to produce an output.");
             }
 
 
@@ -240,7 +240,7 @@ namespace multiplayercards
                         player.playerCards = new string[scores.Length];
                         player.playerCards = scores;
                         player.Id = id;
-                        CalculateScore calculateScore = new CalculateScore();
+                        CalculateScore calculateScore = new CalculateScore(null,null);
                         player.playerScore = calculateScore.CalculatePlayerScore(scores);
                         playersList.Add(
                             player);
@@ -291,6 +291,20 @@ namespace multiplayercards
 
             };
 
+        public CalculateScore(List<CardsNumbers> cardsNumber, List<SuitNumber> suitsValue)
+        {
+            if(cardsNumber != null)
+            {
+                cardsNumbers = cardsNumber.ToList();
+            }
+
+            if (suitsValue != null)
+            {
+                suitsValues = suitsValue.ToList();
+            }
+
+
+        }
 
         public int CalculatePlayerScore(string[] playercards)
         {
@@ -427,7 +441,7 @@ namespace multiplayercards
             foreach (var playerData in players)
             {
 
-                CalculateScore calculateScore = new CalculateScore();
+                CalculateScore calculateScore = new CalculateScore(null,null);
                 playerData.playerScore = calculateScore.CalculatePlayerScoreSuits(playerData.playerCards);
 
             }
