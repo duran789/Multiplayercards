@@ -42,9 +42,16 @@ namespace multiplayercards
                 if (winners.Count > 1)
                 {
                     winners = processResults.RecalculateTiedPlayers(winners);
+                    fileInputOutputSystem.WriteOutputFile(outputfilepath, string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore) + ":" + winners.Max(x => x.playerSuitScore));
+
+                }
+                else
+                {
+                    fileInputOutputSystem.WriteOutputFile(outputfilepath, string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore));
+
                 }
 
-                fileInputOutputSystem.WriteOutputFile(outputfilepath, string.Join(",", winners.Select(x => x.playerName)) + ":" + winners.Max(x => x.playerScore));
+
 
             }
             catch(Exception ex)
@@ -73,6 +80,8 @@ namespace multiplayercards
         public string playerName { get; set; }
         public string[] playerCards { get; set; }
         public double playerScore { get; set; }
+        public double playerSuitScore { get; set; }
+
     }
 
     public class CardsNumbers
@@ -436,17 +445,36 @@ namespace multiplayercards
             }
         }
 
+
+        public List<Player> CalculateHighestSuitScore(List<Player> players)
+        {
+
+            if (players?.Count() != 0)
+            {
+                var hightestscore = players.Max(x => x.playerSuitScore);
+                var result = players.Where(x => x.playerSuitScore == hightestscore).ToList();
+
+                Console.WriteLine(string.Join(",", result.Select(x => x.playerName)) + ":" + hightestscore);
+
+                return result;
+            }
+            else
+            {
+                throw new Exception($"Exception: No cards");
+            }
+        }
+
         public List<Player> RecalculateTiedPlayers(List<Player> players)
         {
             foreach (var playerData in players)
             {
 
                 CalculateScore calculateScore = new CalculateScore(null,null);
-                playerData.playerScore = calculateScore.CalculatePlayerScoreSuits(playerData.playerCards);
+                playerData.playerSuitScore = calculateScore.CalculatePlayerScoreSuits(playerData.playerCards);
 
             }
 
-            return CalculateHighestScore(players);
+            return CalculateHighestSuitScore(players);
 
         }
     
